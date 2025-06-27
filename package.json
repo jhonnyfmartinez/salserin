@@ -1,0 +1,32 @@
+{
+  "name": "salserin-discord-bot",
+  "version": "1.0.0",
+  "description": "A Discord music bot with Spotify and YouTube integration",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "music",
+    "spotify",
+    "youtube"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@discordjs/voice": "^0.16.1",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.5.0",
+    "ffmpeg-static": "^5.2.0",
+    "libsodium-wrappers": "^0.7.13",
+    "spotify-web-api-node": "^5.0.2",
+    "youtube-search-api": "^1.2.1",
+    "ytdl-core": "npm:@distube/ytdl-core@^4.16.12"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

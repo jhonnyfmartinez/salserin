@@ -1,0 +1,66 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is "Salserín" - a Discord music bot focused on Colombian music with Spotify and YouTube integration. The bot allows users to play music in voice channels, manage queues, and access predefined playlists of salsa music.
+
+## Commands for Development
+
+- `npm start` - Run the bot in production mode
+- `npm run dev` - Run the bot in development mode with nodemon for auto-restart
+- `npm install` - Install dependencies
+
+## Architecture
+
+The bot follows a simple modular structure:
+
+### Main Components
+
+- **index.js** - Main bot entry point with Discord.js client setup and command handling
+- **config.js** - Configuration loading from environment variables and static settings
+- **services/MusicService.js** - Core music functionality handling audio streaming, queues, and external API integration
+
+### Key Architecture Details
+
+1. **Command System**: Uses prefix-based commands (`!` by default) with a switch statement in the main message handler
+2. **Music Service**: Single service class managing all music operations including:
+
+   - Per-guild queue management using Maps
+   - Audio player and voice connection management
+   - YouTube and Spotify API integration
+   - Built-in playlist definitions for Colombian music genres
+
+3. **State Management**: Guild-specific state stored in Maps:
+
+   - `queues` - Song queues per guild
+   - `players` - Audio players per guild
+   - `connections` - Voice connections per guild
+   - `currentSongs` - Currently playing songs per guild
+   - `history` - Song history per guild (max 50)
+
+4. **External APIs**:
+   - YouTube: Uses `ytdl-core` for streaming and `youtube-search-api` for search
+   - Spotify: Uses `spotify-web-api-node` with client credentials flow
+   - Radio: Streams Colombian radio stations via direct URLs
+
+## Environment Setup
+
+Required environment variables (create `.env` file):
+
+- `DISCORD_TOKEN` - Discord bot token
+- `SPOTIFY_CLIENT_ID` - Spotify API client ID
+- `SPOTIFY_CLIENT_SECRET` - Spotify API client secret
+
+## Built-in Playlists
+
+The bot includes predefined playlists for Colombian music:
+
+- `salsa` - Salsa tracks
+
+## Radio Stations
+
+Preconfigured Colombian radio stations:
+
+- `elsol` - El Sol
