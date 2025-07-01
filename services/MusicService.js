@@ -33,20 +33,6 @@ class MusicService {
         "Willie Colon - El Gran Varón",
         "Hector Lavoe - Periódico de Ayer",
       ],
-      reggaeton: [
-        "Bad Bunny - Yonaguni",
-        "J Balvin - Mi Gente",
-        "Daddy Yankee - Gasolina",
-        "Karol G - Tusa",
-        "Ozuna - Baila Baila Baila",
-      ],
-      vallenato: [
-        "Carlos Vives - La Tierra del Olvido",
-        "Silvestre Dangond - Niégame Tres Veces",
-        "Jorge Celedón - Te Amo Tanto",
-        "Los Diablitos - A Besitos",
-        "Binomio de Oro - Muere Una Flor",
-      ],
     };
   }
 

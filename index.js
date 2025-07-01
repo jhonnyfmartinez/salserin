@@ -104,7 +104,7 @@ async function handleHelp(message) {
       {
         name: "📋 Playlists & Radio",
         value:
-          "`!playlist <name>` - Play a predefined playlist\nAvailable playlists: salsa, reggaeton, vallenato\n`!radio <station>` - Play Colombian radio stations\nAvailable: tropicana, radioactiva, bésame",
+          "`!playlist <name>` - Play a predefined playlist\nAvailable playlists: salsa\n`!radio <station>` - Play Colombian radio stations\nAvailable: elsol",
       },
     ],
     footer: {
@@ -392,7 +392,7 @@ async function handleSearchAll(message, args) {
 async function handlePlaylist(message, args) {
   if (!args.length) {
     return message.reply(
-      "❌ Please specify a playlist name!\nAvailable: `salsa`, `reggaeton`, `vallenato`"
+      "❌ Please specify a playlist name!\nAvailable: `salsa`"
     );
   }
 
