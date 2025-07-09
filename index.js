@@ -1,11 +1,4 @@
 const { Client, GatewayIntentBits, Collection } = require("discord.js");
-const {
-  joinVoiceChannel,
-  createAudioPlayer,
-  createAudioResource,
-  AudioPlayerStatus,
-  VoiceConnectionStatus,
-} = require("@discordjs/voice");
 const config = require("./config");
 const MusicService = require("./services/MusicService");
 
@@ -445,8 +438,18 @@ async function handleRadio(message, args) {
   }
 }
 
-process.on("unhandledRejection", (error) => {
+process.on("unhandledRejection", async (error) => {
   console.error("Unhandled promise rejection:", error);
+});
+
+// Graceful shutdown
+process.on("SIGTERM", async () => {
+  console.log("Got SIGTERM. Graceful shutdown start...");
+  if (client.musicService) {
+    client.musicService.stop();
+  }
+  await client.destroy();
+  process.exit(0);
 });
 
 client.login(config.token);

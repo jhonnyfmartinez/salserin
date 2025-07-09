@@ -5,10 +5,11 @@ const {
   AudioPlayerStatus,
   VoiceConnectionStatus,
 } = require("@discordjs/voice");
-const ytdl = require("ytdl-core");
+const ytdl = require("@distube/ytdl-core");
 const YoutubeSearchApi = require("youtube-search-api");
 const SpotifyWebApi = require("spotify-web-api-node");
 const config = require("../config");
+const { spawn } = require("child_process");
 
 class MusicService {
   constructor() {
@@ -17,6 +18,7 @@ class MusicService {
     this.connections = new Map();
     this.currentSongs = new Map();
     this.history = new Map();
+    this.ffmpegProcess = null;
 
     this.spotifyApi = new SpotifyWebApi({
       clientId: config.spotify.clientId,
@@ -61,13 +63,14 @@ class MusicService {
     try {
       let songInfo;
 
+      if (source && typeof query === "object") {
+        return await this.playFromSource(message, query, source);
+      }
+
       if (this.isSpotifyUrl(query)) {
         songInfo = await this.getSpotifyTrack(query);
       } else if (this.isYouTubeUrl(query)) {
         songInfo = await this.getYouTubeInfo(query);
-      } else if (source) {
-        // Use specified source
-        return await this.playFromSource(message, query, source);
       } else {
         songInfo = await this.searchYouTubeSingle(query);
       }
@@ -167,6 +170,24 @@ class MusicService {
     }
   }
 
+  async playFromSource(message, query, source) {
+    if (source === "spotify") {
+      return await this.playSpotify(message, query);
+    } else if (source === "youtube") {
+      return await this.playYouTube(message, query);
+    }
+  }
+
+  async playSpotify(message, query) {
+    const songInfo = await this.searchSpotify(query);
+    return await this.play(message, songInfo);
+  }
+
+  async playYouTube(message, query) {
+    const songInfo = await this.searchYouTubeSingle(query);
+    return await this.play(message, songInfo);
+  }
+
   pause(guildId) {
     const player = this.players.get(guildId);
     if (!player) {
@@ -243,6 +264,7 @@ class MusicService {
 
     player.stop();
     this.cleanup(guildId);
+
     return { success: true };
   }
 
@@ -414,7 +436,23 @@ class MusicService {
       const player = this.players.get(guildId);
       const radioUrl = config.radioStations[stationName];
 
-      const resource = createAudioResource(radioUrl);
+      // Use FFmpeg to create a stream that Discord.js can handle
+      this.ffmpegProcess = spawn("ffmpeg", [
+        "-i",
+        radioUrl,
+        "-f",
+        "opus",
+        "-ar",
+        "48000",
+        "-ac",
+        "2",
+        "-b:a",
+        "128k",
+        "pipe:1",
+      ]);
+
+      const resource = createAudioResource(this.ffmpegProcess.stdout);
+
       player.play(resource);
 
       this.queues.set(guildId, []);
@@ -486,6 +524,13 @@ class MusicService {
     this.connections.delete(guildId);
     this.currentSongs.delete(guildId);
     this.history.delete(guildId);
+    // clean up ffmpeg process
+    if (this.ffmpegProcess) {
+      this.ffmpegProcess.stdout?.destroy();
+      this.ffmpegProcess.stderr?.destroy();
+      this.ffmpegProcess?.kill();
+      this.ffmpegProcess = null;
+    }
   }
 
   extractArtistFromTitle(title) {

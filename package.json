@@ -1,7 +1,7 @@
 {
-  "name": "salserin-discord-bot",
+  "name": "salsirri-bot",
   "version": "1.0.0",
-  "description": "A Discord music bot with Spotify and YouTube integration",
+  "description": "A Discord music bot with Spotify, YouTube and Radio integration",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -14,17 +14,16 @@
     "spotify",
     "youtube"
   ],
-  "author": "",
+  "author": "Jhonny Martinez <jhonny9500@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@discordjs/voice": "^0.16.1",
     "discord.js": "^14.14.1",
     "dotenv": "^16.5.0",
-    "ffmpeg-static": "^5.2.0",
     "libsodium-wrappers": "^0.7.13",
     "spotify-web-api-node": "^5.0.2",
     "youtube-search-api": "^2.0.0",
-    "ytdl-core": "npm:@distube/ytdl-core@^4.16.12"
+    "@distube/ytdl-core": "^4.16.12"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
